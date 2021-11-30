@@ -3,7 +3,7 @@ import { getAllMovies, createMovieById, getMovieById, deleteMovieById, updateMov
 
 const router = express.Router();
 
-router.get("/", async (request, response) => {
+router.route("/").get(async (request, response) => {
 
     console.log(request.query);
     const filter = request.query;
@@ -14,15 +14,13 @@ router.get("/", async (request, response) => {
     //db.movies.find({language: "tamil",rating: 8})
     const filterMovie = await getAllMovies(filter);
     response.send(filterMovie);
-})
-
-router.post("/", async (request, response) => {
+}).post(async (request, response) => {
     const data = request.body;
     const result = await createMovieById(data);
     response.send(result);
-})
+});
 
-router.get("/:id", async (request, response) => {
+router.route("/:id").get(async (request, response) => {
     console.log(request.params);
     const { id } = request.params;
     //db query
@@ -30,18 +28,14 @@ router.get("/:id", async (request, response) => {
 
     console.log(movie);
     movie ? response.send(movie) : response.status(404).send({ message: "No matching movie found" })
-})
-
-router.delete("/:id", async (request, response) => {
+}).delete(async (request, response) => {
     console.log(request.params);
     const { id } = request.params;
     //db query
     const result = await deleteMovieById(id);
 
     result.deletedCount > 0 ? response.send(result) : response.status(404).send({ message: "No matching movie found" })
-})
-
-router.put("/:id", async (request, response) => {
+}).put(async (request, response) => {
     console.log(request.params);
     const { id } = request.params;
     const data = request.body;
@@ -50,6 +44,6 @@ router.put("/:id", async (request, response) => {
     const movie = await getMovieById(id);
     response.send(movie);
     // result.deletedCount > 0 ? response.send(result) : response.status(404).send({ message: "No matching movie found" })
-})
+});
 
 export const moviesRouter = router;
